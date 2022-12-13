@@ -26,7 +26,7 @@ type FindParams struct {
 	OrderBy string
 }
 
-func New(connection *sqlx.DB, tableName string) *goqb {
+func New(connection *sqlx.DB, tableName string) Executor {
 	return &goqb{
 		connection: connection,
 		tableName:  tableName,
