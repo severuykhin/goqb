@@ -108,7 +108,7 @@ func (qb *goqb) Delete(
 ) error {
 	query := sq.
 		Delete(qb.tableName).
-		Where(where)
+		Where(sq.Eq(where))
 
 	sql, values, err := query.ToSql()
 	if err != nil {
