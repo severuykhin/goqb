@@ -42,7 +42,7 @@ func (qb *goqb) Update(
 	query := sq.
 		Update(qb.tableName).
 		SetMap(fields).
-		Where(where)
+		Where(sq.Eq(where))
 
 	sql, values, err := query.ToSql()
 	if err != nil {
