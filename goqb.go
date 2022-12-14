@@ -130,7 +130,7 @@ func (qb *goqb) Find(
 	ctx context.Context,
 	fields Fields,
 	params FindParams,
-	scanFunc func(*rows) error,
+	scanFunc func(Rows) error,
 ) error {
 
 	query := sq.Select(fields...).From(qb.tableName)
@@ -158,11 +158,11 @@ func (qb *goqb) Find(
 
 	sqlQuery = qb.connection.Rebind(sqlQuery)
 
-	rows, err := qb.connection.Query(sqlQuery, values...)
+	sqlRows, err := qb.connection.Query(sqlQuery, values...)
 
 	defer func() {
-		if rows != nil {
-			err := rows.Close()
+		if sqlRows != nil {
+			err := sqlRows.Close()
 			if err != nil {
 				fmt.Println("QB ERR: ", err)
 				// c.logger.Error(ErrCodeCloseRowsError, err.Error(), "sql", sqlQuery)
@@ -177,7 +177,7 @@ func (qb *goqb) Find(
 		return err
 	}
 
-	err = scanFunc(newRows(rows))
+	err = scanFunc(&rows{sqlRows: sqlRows})
 
 	if err != nil {
 		return err
