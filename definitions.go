@@ -8,3 +8,8 @@ type Executor interface {
 	Delete(ctx context.Context, where Where) error
 	Find(ctx context.Context, fields Fields, params FindParams, scanFunc func(*rows) error) error
 }
+
+type Rows interface {
+	Next() bool
+	Scan(dest ...any) error
+}
