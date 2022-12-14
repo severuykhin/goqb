@@ -136,7 +136,7 @@ func (qb *goqb) Find(
 	query := sq.Select(fields...).From(qb.tableName)
 
 	if params.Where != nil {
-		query = query.Where(params.Where)
+		query = query.Where(sq.Eq(params.Where))
 	}
 
 	if params.Limit > 0 {
