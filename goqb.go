@@ -19,6 +19,8 @@ type Fields []string
 
 type FieldMap map[string]interface{}
 
+type SelectBuilder = sq.SelectBuilder
+
 type FindParams struct {
 	Where   Where
 	Limit   int
@@ -126,32 +128,13 @@ func (qb *goqb) Delete(
 	return nil
 }
 
-func (qb *goqb) Find(
-	ctx context.Context,
-	fields Fields,
-	params FindParams,
-	scanFunc func(Rows) error,
-) error {
+func (qb *goqb) Select(fields Fields) SelectBuilder {
+	return sq.Select(fields...).From(qb.tableName)
+}
 
-	query := sq.Select(fields...).From(qb.tableName)
+func (qb *goqb) Query(q Query, scanFunc func(Rows) error) error {
 
-	if params.Where != nil {
-		query = query.Where(sq.Eq(params.Where))
-	}
-
-	if params.Limit > 0 {
-		query = query.Limit(uint64(params.Limit))
-	}
-
-	if params.Offset > 0 {
-		query = query.Offset(uint64(params.Offset))
-	}
-
-	if len(params.OrderBy) > 0 {
-		query = query.OrderBy(params.OrderBy)
-	}
-
-	sqlQuery, values, err := query.ToSql()
+	sqlQuery, values, err := q.ToSql()
 	if err != nil {
 		return err
 	}
