@@ -7,6 +7,7 @@ type Executor interface {
 	Insert(ctx context.Context, fields FieldMap) error
 	Delete(ctx context.Context, where Where) error
 	Select(fields Fields) SelectBuilder
+	Query(q Query, scanFunc func(Rows) error) error
 }
 
 type Rows interface {
